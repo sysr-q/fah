@@ -1,0 +1,119 @@
+{% extends "layout.html" %}
+{% block title %}{{ room }}{% endblock %}
+
+{% block head %}
+	{{ super() }}
+
+	<meta name="x-room" content="{{ room | escape }}" />
+	<meta name="x-handle" content="{{ handle | escape }}" />
+{% endblock %}
+
+{% block content %}
+<div id="handleModal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 class="dark">Change handle</h3>
+	</div>
+	<div class="modal-body">
+		<p class="first-time-p">
+			Before you join this game, you must choose a handle!
+		</p>
+
+		<form id="handleForm" class="form-horizontal" role="form" method="POST" action="" data-toggle="validator">
+			<div class="form-group">
+				<div class="control-group">
+					<label class="control-label" for="handle">Handle</label>
+					<div class="controls">
+						<input class="x-handle-value" type="text" name="handle" placeholder="John Smith" required>
+						<span class="help-block with-errors"></span>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="control-group">
+					<div class="controls">
+						<button type="submit" class="btn btn-primary">
+							Change
+						</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div id="shareModal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 class="dark">Share room link</h3>
+	</div>
+	<div class="modal-body">
+		<input id="shareModalLink" type="text" value="{{ url_for('room', name=room, _external=True) }}" readonly>
+		<p>
+			Give your friend the above link so they can join you!
+		</p>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+	{{ super() }}
+	<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+
+	<script type="text/javascript" charset="utf-8">
+		function updateHandle(to, send) {
+			xyzzy.handle = to;
+			$(".x-handle").text(xyzzy.handle);
+			$(".x-handle-value").val(xyzzy.handle);
+			if (send && xyzzy.socket !== null) {
+				xyzzy.socket.emit("handle.change", {handle: xyzzy.handle});
+			}
+		}
+
+		$(function () {
+			xyzzy.connect();
+
+			$("#handleForm").submit(function (e) {
+				var $h = $("#handleModal"),
+					send = !($h.hasClass("first-time"));
+
+				var newHandle = $("#handleForm .x-handle-value").val();
+				updateHandle(newHandle, send);
+
+				if (!send) {
+					$("html").addClass("in-game");
+					$h.removeClass("first-time");
+					$h.modal({keyboard: true, backdrop: true}); // fix it up
+					xyzzy.join(xyzzy.room, true);
+				}
+
+
+				$("#handleModal").modal('hide');
+				e.preventDefault();
+			});
+
+			$("#x-room-name").text(xyzzy.room);
+			$(".x-handle").text(xyzzy.handle);
+			$(".x-handle-value").val(xyzzy.handle);
+
+			if (xyzzy.handle == "") {
+				// TODO: hang until handleModal gets given a nick
+				$("#handleModal").addClass("first-time").modal({
+					keyboard: false,
+					backdrop: 'static'
+				});
+				return;
+			} else {
+				$("html").addClass("in-game");
+				xyzzy.socket.on('connect', function() {
+					xyzzy.join(xyzzy.room, true);
+				});
+			}
+
+		});
+	</script>
+{% endblock %}

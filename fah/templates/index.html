@@ -2,48 +2,64 @@
 {% block title %}Flask Against Humanity{% endblock %}
 
 {% block content %}
-<div class="navbar navbar-inverse navbar-fixed-top">
-	<div class="navbar-inner">
-		<div class="x-margin">
-			<a class="brand" href="#">Flask Against Humanity</a>
-			<ul class="nav">
-				<li class="active"><a href="{{ url_for('index') }}">Home</a></li>
-			</ul>
-			<ul class="nav pull-right">
-				<li class="disabled"><a tabindex="-1" href="#"><i>xyzzy</i></a></li>
-				<li class="dropdown">
-					<a id="drop1" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">John Smith <b class="caret"></b></a>
-					<ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
-						<li role="presentation"><a role="menuitem" tabindex="-1" href="http://google.com">Action</a></li>
-						<li role="presentation"><a role="menuitem" tabindex="-1" href="#anotherAction">Another action</a></li>
-						<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
-						<li role="presentation" class="divider"></li>
-						<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
-					</ul>
-				</li>
-			</ul>
-		</div>
+<div class="row">
+	<div class="span6 offset2">
+		<h1 class="spruik">Flask Against Humanity</h1>
+		<p>
+			Have you ever played a game of <i>Cards Against Humanity</i>?
+		</p>
+		<p>
+			Yes? No? Maybe-so?<br>
+			Never fear! <i>Flask Against Humanity</i> is here to save the day.
+			Designed from the bottom up with <b>spicy memes</b> in mind, <i>FAH</i>
+			is one lean, green, meme-machine.
+		</p>
+		<p>
+			Guaranteed to rustle some jimmies<sup>*</sup>.
+		</p>
+		<p>
+			<small class="fine-print">
+				<sup>*</sup> Not an actual guarantee.
+			</small>
+		</p>
+		<hr>
+		<p>
+			To start a game, or to join an existing game, simply enter the room
+			name, and your desired handle over to the right, then press <i>Join!</i>.
+		</p>
+	</div>
+	<div class="span6">
+		<form class="form-horizontal" role="form" method="POST" action="{{ url_for('.room_rd') }}" data-toggle="validator">
+			<div class="form-group">
+				<div class="control-group">
+					<label class="control-label" for="room">Room</label>
+					<div class="controls">
+						<input type="text" name="room" placeholder="xyzzy" required>
+						<span class="help-block with-errors"></span>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="control-group">
+					<label class="control-label" for="handle">Handle</label>
+					<div class="controls">
+						<input type="text" name="handle" placeholder="John Smith" required>
+						<span class="help-block with-errors"></span>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="control-group">
+					<div class="controls">
+						<button type="submit" class="btn btn-primary">
+							Join!
+						</button>
+					</div>
+				</div>
+			</div>
+		</form>
 	</div>
 </div>
-<form class="form-horizontal" method="POST" action="{{ url_for('.room_rd') }}">
-	<div class="control-group">
-		<label class="control-label" for="room">Room</label>
-		<div class="controls">
-			<input type="text" name="room" placeholder="xyzzy">
-		</div>
-	</div>
-	<div class="control-group">
-		<label class="control-label" for="handle">Handle</label>
-		<div class="controls">
-			<input type="text" name="handle" placeholder="John Smith">
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="controls">
-			<button type="submit" class="btn btn-primary">
-				Join
-			</button>
-		</div>
-	</div>
-</form>
 {% endblock %}

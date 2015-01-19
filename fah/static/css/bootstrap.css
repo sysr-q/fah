@@ -1280,6 +1280,7 @@ input[type="checkbox"]:focus {
   height: auto;
 }
 
+/* fah
 input:-moz-placeholder,
 textarea:-moz-placeholder {
   color: #bbbbbb;
@@ -1294,6 +1295,7 @@ input::-webkit-input-placeholder,
 textarea::-webkit-input-placeholder {
   color: #bbbbbb;
 }
+*/
 
 .radio,
 .checkbox {
@@ -1534,30 +1536,41 @@ input[type="checkbox"][readonly] {
   border-color: #ffffff;
 }
 
+.form-group.has-error .control-group .control-label,
 .control-group.error .control-label,
+.form-group.has-error .control-group .help-block,
 .control-group.error .help-block,
+.form-group.has-error .control-group .help-inline,
 .control-group.error .help-inline {
-  color: #ffffff;
+  color: #aa0000; /* fah */
 }
 
+.form-group.has-error .control-group .checkbox,
 .control-group.error .checkbox,
+.form-group.has-error .control-group .radio,
 .control-group.error .radio,
+.form-group.has-error .control-group input,
 .control-group.error input,
+.form-group.has-error .control-group select,
 .control-group.error select,
+.form-group.has-error .control-group textarea,
 .control-group.error textarea {
-  color: #ffffff;
+  color: #aa0000; /* fah */
 }
 
+.form-group.has-error .control-group input,
 .control-group.error input,
+.form-group.has-error .control-group select,
 .control-group.error select,
+.form-group.has-error .control-group textarea,
 .control-group.error textarea {
-  border-color: #ffffff;
+  border-color: #aa0000; /* fah */
 }
 
 .control-group.error input:focus,
 .control-group.error select:focus,
 .control-group.error textarea:focus {
-  border-color: #ffffff;
+  border-color: #aa0000; /* fah */
   -webkit-box-shadow: 0;
      -moz-box-shadow: 0;
           box-shadow: 0;
@@ -2273,7 +2286,7 @@ table th[class*="span"],
 
 [class^="icon-"],
 [class*=" icon-"] {
-  display: inline-block; /* clc */
+  display: none;
   width: 14px;
   height: 14px;
   margin-top: 1px;

@@ -22,3 +22,50 @@ html.geocities body {
 	position: relative;
 	left: -7px; // hack central
 }
+
+// Anything with this class is hidden until we're in an active game.
+html:not(.in-game) {
+	.nav.x-in-game, .x-in-game {
+		display: none;
+	}
+}
+
+h1.dark, h2.dark, h3.dark {
+	color: #000000;
+}
+
+h1.spruik {
+	margin-bottom: 20px;
+}
+
+small.fine-print {
+	font-size: smaller;
+}
+
+// Hack around bootstra.836 shit.
+html:not(.geocities) {
+	.help-block.with-errors {
+		ul {
+			margin-bottom: 0;
+		}
+	}
+
+	#shareModalLink {
+		width: 515px;
+	}
+
+	.modal-footer .btn + .btn {
+		margin-bottom: 20px;
+	}
+}
+
+form:not(.first-time) {
+	.first-time-p {
+		display: none;
+	}
+}
+
+// The first time they connect, they can't dismiss the modal.
+.first-time .close {
+	display: none;
+}
