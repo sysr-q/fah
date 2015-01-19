@@ -84,6 +84,7 @@
 			if (new_ == xyzzy.handle) {
 				return;
 			}
+			console.log("xyzzy: Changing handle from", xyzzy.handle, "to", new_);
 			xyzzy.handle = new_;
 
 			$(".x-handle").text(xyzzy.handle);

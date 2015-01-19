@@ -1,3 +1,9 @@
+*, *:before, *:after {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
 body {
 	padding: 0;
 	padding-top: 40px;
@@ -59,6 +65,11 @@ html:not(.geocities) {
 	}
 }
 
+// Hack around geobootstrap shit.
+html.geocities input {
+	height: auto;
+}
+
 form:not(.first-time) {
 	.first-time-p {
 		display: none;
@@ -68,4 +79,121 @@ form:not(.first-time) {
 // The first time they connect, they can't dismiss the modal.
 .first-time .close {
 	display: none;
+}
+
+// Actual CAH card stuff
+html.geocities .x-card {
+	display: inline-block;
+	margin-left: 10px;
+	margin-bottom: 20px;
+
+	font-size: 90%;
+
+	border-radius: 5px;
+	height: 250px;
+	width: 180px;
+
+	padding: 15px;
+
+	background-color: #fff;
+	color: #000;
+
+	transition: transform 0.3s ease;
+
+	&.answer, &.trump {
+		transform: scale(0.9);
+		margin-top: 0;
+		margin-bottom: 0;
+		margin-left: 10px;
+		margin-right: 0;
+
+		&:hover {
+			transform: none;
+		}
+	}
+
+	&.question {
+		background-color: #000000;
+		color: #ffffff;
+	}
+
+	&.answer {
+		background-color: #ffffff;
+		color: #000000;
+	}
+
+	&.trump {
+		background-color: #ffffff;
+		color: darken(silver, 20%);
+	}
+}
+
+html:not(.geocities) .x-card {
+	display: inline-block;
+	padding: 10px 15px;
+	margin: 10px 5px;
+	margin-left: 20px;
+	margin-right: 10px;
+	border: 2px solid #000000;
+
+	-webkit-box-shadow: 0 0 0 5px, 11px 13px 0 4px black;
+	-moz-box-shadow: 0 0 0 5px, 11px 13px 0 4px black;
+	box-shadow: 0 0 0 5px, 11px 13px 0 4px black;
+
+	font-size: 90%;
+	height: 250px;
+	width: 180px;
+
+	&.question {
+		border-color: #bbbbbb;
+
+		-webkit-box-shadow: 0 0 0 5px, 11px 13px 0 4px #bbbbbb;
+		-moz-box-shadow: 0 0 0 5px, 11px 13px 0 4px #bbbbbb;
+		box-shadow: 0 0 0 5px, 11px 13px 0 4px #bbbbbb;
+
+		background-color: #000000;
+		color: #000000;
+
+		.x-card-body {
+			color: #ffffff;
+		}
+	}
+
+	transition: transform 0.3s ease;
+
+	&.answer, &.trump {
+		transform: scale(0.9);
+		margin-top: 0;
+		margin-bottom: 0;
+		margin-left: 10px;
+		margin-right: 0;
+
+		&:hover {
+			transform: none;
+		}
+	}
+
+	&.answer {
+		background-color: #bbbbbb;
+		color: #bbbbbb;
+
+		.x-card-body {
+			color: #000000;
+		}
+	}
+
+	&.trump {
+		background-color: #bbbbbb;
+		color: #bbbbbb;
+
+		.x-card-body {
+			color: darken(silver, 35%);
+		}
+	}
+}
+
+// Honestly.. Dunno why I need this.
+html:not(.geocities) #x-played-cards .x-card:first-child {
+	position: relative;
+	top: -20px;
 }
