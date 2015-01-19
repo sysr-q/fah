@@ -65,26 +65,17 @@
 	<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
 
 	<script type="text/javascript" charset="utf-8">
-		function updateHandle(to, send) {
-			xyzzy.handle = to;
-			$(".x-handle").text(xyzzy.handle);
-			$(".x-handle-value").val(xyzzy.handle);
-			if (send && xyzzy.socket !== null) {
-				xyzzy.socket.emit("handle.change", {handle: xyzzy.handle});
-			}
-		}
-
 		$(function () {
 			xyzzy.connect();
 
 			$("#handleForm").submit(function (e) {
 				var $h = $("#handleModal"),
-					send = !($h.hasClass("first-time"));
+					local = $h.hasClass("first-time");
 
 				var newHandle = $("#handleForm .x-handle-value").val();
-				updateHandle(newHandle, send);
+				xyzzy.changeHandle(newHandle, local);
 
-				if (!send) {
+				if (local) {
 					$("html").addClass("in-game");
 					$h.removeClass("first-time");
 					$h.modal({keyboard: true, backdrop: true}); // fix it up

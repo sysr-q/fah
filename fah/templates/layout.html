@@ -80,6 +80,18 @@
 			console.log("xyzzy: Joining room", xyzzy.room);
 			xyzzy.socket.emit("join", {handle: xyzzy.handle, room: xyzzy.room});
 		};
+		xyzzy.changeHandle = function (new_, local) {
+			if (new_ == xyzzy.handle) {
+				return;
+			}
+			xyzzy.handle = new_;
+
+			$(".x-handle").text(xyzzy.handle);
+			$(".x-handle-value").val(xyzzy.handle);
+			if (!local && xyzzy.socket !== null) {
+				xyzzy.socket.emit("handle.change", {handle: xyzzy.handle});
+			}
+		};
 		xyzzy.geocities = function geocities(on) {
 			var x = "{{ url_for('static', filename='css/geo.bootstrap.min.css') }}",
 				y = "{{ url_for('static', filename='css/bootstrap.css') }}";
