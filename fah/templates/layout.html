@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	{% block head %}
+	<title>{% block title %}{% endblock %} :: FAH</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link id="page-styles" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" media="screen">
+	<script>
+		function geocities() {
+			var x = "{{ url_for('static', filename='css/geo.bootstrap.min.css') }}",
+				y = "{{ url_for('static', filename='css/bootstrap.min.css') }}";
+			var $z = $("#page-styles");
+			if ($z.attr("href") == x) {
+				console.log("GEOCITIES DISABLED :(");
+				$z.attr("href", y);
+				$("html").removeClass("geocities")
+			} else {
+				console.log("GEOCITIES ACTIVATED :)");
+				$z.attr("href", x);
+				$("html").addClass("geocities");
+			}
+		}
+	</script>
+
+	<link rel="stylesheet/less" type="text/css" href="{{ url_for('static', filename='less/base.less') }}" />
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.2.0/less.min.js"></script>
+
+	{#
+	<script type="text/javascript" charset="utf-8">
+	$(function () {
+		var socket = io.connect(('https:' == document.location.protocol ? 'https://' : 'http://') + document.domain + ':' + location.port);
+		socket.on('connect', function() {
+			socket.emit('join', {name: "John Smith", room: "xyzzy"});
+		});
+	});
+	</script>
+	#}
+	{% endblock %}
+	</head>
+<body>
+	<noscript>
+		It looks like you don't have JavaScript enabled.<br>
+		Good luck playing FAH without it, buddy.
+	</noscript>
+	{% block content %}
+	{% endblock %}
+	{#<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.1.4/zepto.min.js"></script>#}
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+</body>
+</html>
