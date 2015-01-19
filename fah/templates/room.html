@@ -82,6 +82,15 @@
 		<p>
 			This window will disappear when FAH reconnects.
 		</p>
+		<div class="x-super-long hide">
+			<p>
+				This is taking a while.. If you want, mash this button like it
+				owes you money. It might do something.
+			</p>
+			<button id="x-super-long" class="btn btn-primary">
+				Reconnect
+			</button>
+		</div>
 	</div>
 </div>
 {% endblock %}
@@ -96,11 +105,28 @@
 
 			// Just in case.
 			xyzzy.socket.on("disconnect", function () {
+				console.log("xyzzy: Disconnected! Modal inbound.");
+				$("html").removeClass("in-game");
 				$("#disconnectModal").modal({keyboard: false, backdrop: 'static'});
 				$("#disconnectModal").modal('show');
 			});
 			xyzzy.socket.on("connect", function () {
+				console.log("xyzzy: Connected!");
+				$("html").addClass("in-game");
 				$("#disconnectModal").modal('hide');
+			});
+			xyzzy.socket.on("reconnecting", function (n) {
+				console.log("xyzzy: Reconnect attempt", n);
+				if (n >= 64000) {
+					console.log("xyzzy: Enabling mashy-mashy button.");
+					$(".x-super-long").removeClass("hide");
+				}
+			});
+
+			$("#x-super-long").click(function (e) {
+				console.log("xyzzy: Trying to reconnect with mashy-mashy button.");
+				xyzzy.socket.socket.connect();
+				e.preventDefaults();
 			});
 
 			$("#handleForm").submit(function (e) {
