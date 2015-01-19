@@ -58,6 +58,32 @@
 		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
 	</div>
 </div>
+
+<div id="disconnectModal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-header">
+		<h3 class="dark">Houston, we've had a problem.</h3>
+	</div>
+	<div class="modal-body">
+		<p>
+			Something happened, and we don't know what.
+		</p>
+		<p>
+			Maybe it was gremlins sneaking into our server cabinet again.<br>
+			Pesky little things.
+		</p>
+		<p>
+			All that matters is you can't play right now.<br>
+			Sit tight and we'll have this solved <i>eventually</i>.
+		</p>
+
+		<hr>
+
+		<h4 class="dark">Hint!</h4>
+		<p>
+			This window will disappear when FAH reconnects.
+		</p>
+	</div>
+</div>
 {% endblock %}
 
 {% block js %}
@@ -67,6 +93,15 @@
 	<script type="text/javascript" charset="utf-8">
 		$(function () {
 			xyzzy.connect();
+
+			// Just in case.
+			xyzzy.socket.on("disconnect", function () {
+				$("#disconnectModal").modal({keyboard: false, backdrop: 'static'});
+				$("#disconnectModal").modal('show');
+			});
+			xyzzy.socket.on("connect", function () {
+				$("#disconnectModal").modal('hide');
+			});
 
 			$("#handleForm").submit(function (e) {
 				var $h = $("#handleModal"),
