@@ -52,62 +52,7 @@
 	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='js/validator.min.js') }}"></script>
-	<script type="text/javascript">
-		xyzzy = {}; // decent variable name/10
-		xyzzy.room = $('meta[name=x-room]').attr('content');
-		xyzzy.handle = $('meta[name=x-handle]').attr('content');
-		xyzzy.socket = null;
-		xyzzy.connect = function () {
-			var socket = xyzzy.socket = io.connect(('https:' == document.location.protocol ? 'https://' : 'http://') + document.domain + ':' + location.port);
-			socket.on("connect", function () {
-				console.log("xyzzy: Connected to server!");
-			});
-			return socket;
-		};
-		xyzzy.join = function (room, force) {
-			// If force == false, this just lets you change rooms.
-			if (room == xyzzy.room && !force) {
-				// Rejoining? Uh.. Nope?
-				return;
-			}
-
-			// Bail from current room.
-			console.log("xyzzy: Leaving room", xyzzy.room);
-			xyzzy.socket.emit("leave", {room: xyzzy.room});
-
-			// Update and join the new one.
-			xyzzy.room = room;
-			console.log("xyzzy: Joining room", xyzzy.room);
-			xyzzy.socket.emit("join", {handle: xyzzy.handle, room: xyzzy.room});
-		};
-		xyzzy.changeHandle = function (new_, local) {
-			if (new_ == xyzzy.handle) {
-				return;
-			}
-			console.log("xyzzy: Changing handle from", xyzzy.handle, "to", new_);
-			xyzzy.handle = new_;
-
-			$(".x-handle").text(xyzzy.handle);
-			$(".x-handle-value").val(xyzzy.handle);
-			if (!local && xyzzy.socket !== null) {
-				xyzzy.socket.emit("handle.change", {handle: xyzzy.handle});
-			}
-		};
-		xyzzy.geocities = function geocities(on) {
-			var x = "{{ url_for('static', filename='css/geo.bootstrap.min.css') }}",
-				y = "{{ url_for('static', filename='css/bootstrap.css') }}";
-			var $z = $("#page-styles");
-			if (on) {
-				console.log("GEOCITIES ACTIVATED :)");
-				$z.attr("href", x);
-				$("html").addClass("geocities");
-			} else { //$z.attr("href") == x) {
-				console.log("GEOCITIES DISABLED :(");
-				$z.attr("href", y);
-				$("html").removeClass("geocities")
-			}
-		}
-	</script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/xyzzy.js') }}"></script>
 	{% endblock %}
 </body>
 </html>
