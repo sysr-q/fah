@@ -56,3 +56,4 @@ target/
 # vim
 .*.swp
 *~
+trump.py
