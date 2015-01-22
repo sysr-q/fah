@@ -143,7 +143,6 @@
 				$("#disconnectModal").modal('show');
 			});
 			xyzzy.socket.on("connect", function () {
-				console.log("xyzzy: Connected!");
 				$("html").addClass("in-game");
 				$("#disconnectModal").modal('hide');
 			});
