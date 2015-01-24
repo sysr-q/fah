@@ -81,6 +81,24 @@ form:not(.first-time) {
 	display: none;
 }
 
+// Hack in the "FAH" watermark.
+.x-card {
+	position: relative;
+
+	&:after {
+		content: "FAH";
+		position: absolute;
+		bottom: 0px;
+		right: 5px;
+
+		color: #000000;
+	}
+}
+
+#x-current-question:after {
+	color: #ffffff;
+}
+
 // Actual CAH card stuff
 html.geocities .x-card {
 	display: inline-block;
@@ -196,4 +214,13 @@ html:not(.geocities) .x-card {
 html:not(.geocities) #x-played-cards .x-card:first-child {
 	position: relative;
 	top: -20px;
+}
+
+.expansion {
+	.expansion-name {
+		color: #000000;
+	}
+
+	.expansion-desc {
+	}
 }

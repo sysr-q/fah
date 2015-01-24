@@ -59,6 +59,33 @@
 	</div>
 </div>
 
+<div id="expacModal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 class="dark">Select your expansions</h3>
+	</div>
+	<div class="modal-body" id="expansion-list">
+		{% for expansion in expansions %}
+			{% if expansion.ident == "alternia" %}
+				<hr>
+				<h3 class="dark">Unofficial decks</h3>
+				<hr>
+			{% endif %}
+
+			<div class="expansion">
+				<div class="expansion-name">
+					{{ expansion.name }}
+					<button class="btn btn-primary pull-right" data-expac="{{ expansion.ident }}">+</button>
+				</div>
+				<small class="expansion-desc fine-print">{{ expansion.description }}</small>
+			</div>
+		{% endfor %}
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+	</div>
+</div>
+
 <div id="disconnectModal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-header">
 		<h3 class="dark">Houston, we've had a problem.</h3>
@@ -96,33 +123,30 @@
 
 <div class="row">
 	<div class="span3">
-<div id="x-current-question" class="x-card question">
-	<div class="x-card-body">
-		______. That's how I want to die.
-	</div>
-	<div class="x-card-footer">
-		{# TODO: watermark #}
-	</div>
-</div>
+		<div id="x-current-question" class="x-card question">
+			<div class="x-card-body">
+				______. That's how I want to die.
+			</div>
+		</div>
 	</div>
 	<div class="span9">
-<div id="x-played-cards">
-	<div class="x-card trump">
-		<span class="x-card-body">The biggest, blackest dick.</span>
-	</div>
+		<div id="x-played-cards">
+			<div class="x-card trump">
+				<span class="x-card-body">The biggest, blackest dick.</span>
+			</div>
 
-	<div class="x-card answer">
-		<span class="x-card-body">Swiftly achieving orgasm.</div>
-	</div>
+			<div class="x-card answer">
+				<span class="x-card-body">Swiftly achieving orgasm.</div>
+			</div>
 
-	<div class="x-card answer">
-		<span class="x-card-body">Memes.</span>
-	</div>
+			<div class="x-card answer">
+				<span class="x-card-body">Memes.</span>
+			</div>
 
-	<div class="x-card answer">
-		<span class="x-card-body">Bees?</span>
-	</div>
-</div>
+			<div class="x-card answer">
+				<span class="x-card-body">Bees?</span>
+			</div>
+		</div>
 	</div>
 </div>
 {% endblock %}
@@ -140,7 +164,6 @@
 				console.log("xyzzy: Disconnected! Modal inbound.");
 				$("html").removeClass("in-game");
 				$("#disconnectModal").modal({keyboard: false, backdrop: 'static'});
-				$("#disconnectModal").modal('show');
 			});
 			xyzzy.socket.on("connect", function () {
 				$("html").addClass("in-game");
@@ -148,7 +171,7 @@
 			});
 			xyzzy.socket.on("reconnecting", function (n) {
 				console.log("xyzzy: Reconnect attempt", n);
-				if (n >= 64000) {
+				if (n >= 64000 && !($(".x-super-long").hasClass("hide"))) {
 					console.log("xyzzy: Enabling mashy-mashy button.");
 					$(".x-super-long").removeClass("hide");
 				}
