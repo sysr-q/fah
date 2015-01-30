@@ -15,6 +15,7 @@ import q
 
 from .database import (db, Expansion, BlackCard, WhiteCard)
 from .room import (Room, User, rooms)
+from .trip import mktripcode
 
 def create_app():
 	app = Flask(__name__)
@@ -43,6 +44,10 @@ app, socketio = create_app()
 
 ####################
 
+def _get_room():
+	# Forgive me, #basedgod, for I have sinned.
+	return list(request.namespace.rooms)[0]
+
 @app.before_request
 def setup_user():
 	# If we've not got a user setup already, create one.
@@ -64,6 +69,8 @@ def room_rd():
 
 @app.route("/room/<name>")
 def roomx(name):
+	setup_user()
+
 	room = rooms[name]
 	room.users.append(session['user'])
 	first = len(room.users) == 1  # ^ race condition 101
@@ -77,8 +84,6 @@ def roomx(name):
 
 @socketio.on("connect")
 def si_connect():
-	setup_user()
-
 	join_room(session['user'].uuid)
 
 	emit("player.uuid", {"uuid": session['user'].uuid})
@@ -89,7 +94,8 @@ def si_connect():
 
 @socketio.on("disconnect")
 def si_disconnect():
-	pass
+	room = _get_room()
+	emit("player.leave", {"uuid": session['user'].uuid}, room=room)
 
 
 @socketio.on("join")
@@ -97,14 +103,28 @@ def si_join(data):
 	room = data['room']
 
 	join_room(room)
-	emit("player.join", {"uuid": session['user'].uuid, "handle": session['user'].handle}, room=room)
+	emit("player.join", {"uuid": session['user'].uuid,
+						 "handle": session['user'].handle,
+						 "trip": session['user'].trip}, room=room)
 
 	print("-->", session['user'].handle, "joined room", room)
 
 
 @socketio.on("player.rehandle")
 def si_rehandle(data):
-	q(session)
-	session['user'].handle = data['handle']
+	handle, trip_phrase = data['handle'], ""
+	if "#" in handle:
+		handle, trip_phrase = handle.split("#", 1)
+
+	session['user'].handle = handle
+	if trip_phrase:
+		session['user'].trip = mktripcode(trip_phrase, salt=app.secret_key)
+
+	room = _get_room()
+	emit("player.name-change", {"uuid": session['user'].uuid,
+								"handle": handle,
+								"trip": session['user'].trip}, room=room)
+	emit("player.force-handle", {"handle": handle}, room=session['user'].uuid)
+
 	session.modified = True
 	app.save_session(session, make_response('dummy'))

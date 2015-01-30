@@ -162,6 +162,14 @@
 	<script type="text/javascript" charset="utf-8">
 		$(function () {
 			socket = xyzzy.connect();
+			var $hM = $("#handleModal");
+
+			function _local_join() {
+				$("html").addClass("in-game");
+				$hM.removeClass("first-time");
+				$hM.modal({keyboard: true, backdrop: true}); // fix it up
+				xyzzy.join(xyzzy.room, true, true);
+			}
 
 			// Just in case.
 			xyzzy.socket.on("disconnect", function () {
@@ -175,25 +183,41 @@
 			});
 			xyzzy.socket.on("reconnecting", function (n) {
 				console.log("xyzzy: Reconnect attempt", n);
-				if (n >= 64000 && !($(".x-super-long").hasClass("hide"))) {
+				if (n >= 64000) {
 					console.log("xyzzy: Enabling mashy-mashy button.");
 					$(".x-super-long").removeClass("hide");
 				}
 			});
 			// These ones affect us.
 			xyzzy.socket.on("player.force-handle", function (data) {
-				//xyzzy.changeHandle(data.handle, true);
-				console.log("xyzzy:", data);
+				if ($hM.hasClass("first-time")) {
+					xyzzy.changeHandle(data.handle, true);
+					_local_join();
+					$hM.modal('hide');
+				} else {
+					xyzzy.changeHandle(data.handle, true);
+				}
+				console.log("xyzzy: forced name change to '%s'", data.handle);
 			});
 			xyzzy.socket.on("player.uuid", function (data) {
 				console.log("xyzzy: my uuid '%s'", data.uuid);
 			});
 			// These concern other players.
 			xyzzy.socket.on("player.join", function (data) {
-				console.log("xyzzy", data);
+				xyzzy.members[data.uuid] = {
+					handle: data.handle,
+					trip: data.trip
+				};
+				console.log("xyzzy: player '%s#%s' joined (uuid=%s)", data.handle, data.trip, data.uuid);
 			});
-
-			console.log("->", socket);
+			xyzzy.socket.on("player.name-change", function (data) {
+				console.log("xyzzy", data);
+				if (typeof xyzzy.members[data.uuid] === undefined) {
+				}
+				console.log("xyzzy: player '%s' renamed to '%s'", xyzzy.members[data.uuid].handle, data.handle);
+				xyzzy.members[data.uuid].handle = data.handle;
+				xyzzy.members[data.uuid].trip = data.trip;
+			});
 
 			$("#x-super-long").click(function (e) {
 				console.log("xyzzy: Trying to reconnect with mashy-mashy button.");
@@ -209,15 +233,13 @@
 				xyzzy.changeHandle(newHandle, false);
 
 				if (local) {
-					$("html").addClass("in-game");
-					$h.removeClass("first-time");
-					$h.modal({keyboard: true, backdrop: true}); // fix it up
-					xyzzy.join(xyzzy.room, true, true);
+					_local_join();
 				}
 
 
 				$("#handleModal").modal('hide');
 				e.preventDefault();
+				return false;
 			});
 
 			$("#x-room-name").text(xyzzy.room);

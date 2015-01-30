@@ -2,7 +2,7 @@ xyzzy = {}; // decent variable name/10
 xyzzy.room = $('meta[name=x-room]').attr('content');
 xyzzy.handle = $('meta[name=x-handle]').attr('content');
 xyzzy.socket = null;
-xyzzy.members = [];
+xyzzy.members = {};
 
 xyzzy.connect = function () {
 	var socket = xyzzy.socket = io.connect(('https:' == document.location.protocol ? 'https://' : 'http://') + document.domain + ':' + location.port);
@@ -20,7 +20,7 @@ xyzzy.join = function (room, force, dontLeave) {
 	}
 
 	// Reset member list.
-	xyzzy.members = [];
+	xyzzy.members = {};
 
 	// Bail from current room.
 	if (!dontLeave) {
