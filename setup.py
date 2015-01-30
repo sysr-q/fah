@@ -4,7 +4,7 @@ from setuptools import setup
 
 kw = {
 	"name": "fah",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Flask Against Humanity (copyright infringement pending).",
 	"long_description": __doc__,
 	"url": "https://github.com/sysr-q/fah",
@@ -20,6 +20,8 @@ kw = {
 	"install_requires": [
 		"flask",
 		"flask-socketio",
+		"flask-sqlalchemy",
+		"flask-kvsession",
 	],
 	"zip_safe": False,
 }
