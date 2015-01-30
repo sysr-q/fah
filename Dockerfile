@@ -21,6 +21,10 @@ RUN pip2 install -r requirements.txt
 COPY . /srv/src
 RUN python2 setup.py install
 
+# Compile LESS css.
+RUN apt-get install -y node-less
+RUN make css
+
 # Switch to non-root user.
 RUN chown -R drone:drone /srv/src
 USER drone
