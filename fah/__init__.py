@@ -11,7 +11,6 @@ from flask.ext.socketio import (SocketIO, emit, leave_room, join_room)
 from flask.ext.kvsession import KVSessionExtension
 from simplekv.db.sql import SQLAlchemyStore
 from simplekv.memory import DictStore
-import q
 
 from .database import (db, Expansion, BlackCard, WhiteCard)
 from .room import (Room, User)
