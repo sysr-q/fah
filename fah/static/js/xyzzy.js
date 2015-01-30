@@ -1,6 +1,7 @@
 xyzzy = {}; // decent variable name/10
 xyzzy.room = $('meta[name=x-room]').attr('content');
 xyzzy.handle = $('meta[name=x-handle]').attr('content');
+xyzzy.uuid = null;
 xyzzy.socket = null;
 xyzzy.members = {};
 

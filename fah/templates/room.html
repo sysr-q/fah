@@ -189,6 +189,10 @@
 				}
 			});
 			// These ones affect us.
+			xyzzy.socket.on("player.force-refresh", function () {
+				console.log("xyzzy: forcefully refreshing")
+				window.location = window.location;
+			});
 			xyzzy.socket.on("player.force-handle", function (data) {
 				if ($hM.hasClass("first-time")) {
 					xyzzy.changeHandle(data.handle, true);
@@ -200,6 +204,7 @@
 				console.log("xyzzy: forced name change to '%s'", data.handle);
 			});
 			xyzzy.socket.on("player.uuid", function (data) {
+				xyzzy.uuid = data.uuid;
 				console.log("xyzzy: my uuid '%s'", data.uuid);
 			});
 			// These concern other players.
@@ -208,15 +213,36 @@
 					handle: data.handle,
 					trip: data.trip
 				};
-				console.log("xyzzy: player '%s#%s' joined (uuid=%s)", data.handle, data.trip, data.uuid);
+				console.log("xyzzy: player '%s#%s' joined (%s)", data.handle, data.trip, data.uuid);
+			});
+			xyzzy.socket.on("player.joins", function (data) {
+				data.forEach(function (player) {
+					xyzzy.members[player.uuid] = {
+						handle: player.handle,
+						trip: player.trip
+					};
+					console.log("xyzzy: player '%s#%s' joined (%s)", player.handle, player.trip, player.uuid);
+				});
+			});
+			xyzzy.socket.on("player.leave", function (data) {
+				console.log("xyzzy: player '%s' left (%s)", xyzzy.members[data.uuid].handle, data.uuid);
+				delete xyzzy.members[data.uuid];
 			});
 			xyzzy.socket.on("player.name-change", function (data) {
-				console.log("xyzzy", data);
-				if (typeof xyzzy.members[data.uuid] === undefined) {
+				if (data.uuid == xyzzy.uuid) {
+					return;
 				}
+
 				console.log("xyzzy: player '%s' renamed to '%s'", xyzzy.members[data.uuid].handle, data.handle);
 				xyzzy.members[data.uuid].handle = data.handle;
 				xyzzy.members[data.uuid].trip = data.trip;
+			});
+			// Super shitty debugging shit.
+			xyzzy.socket.on("__users", function (data) {
+				console.log("xyzzy __users:", data);
+			});
+			xyzzy.socket.on("__room", function (data) {
+				console.log("xyzzy __room:", data);
 			});
 
 			$("#x-super-long").click(function (e) {
