@@ -4,7 +4,7 @@ from setuptools import setup
 
 kw = {
 	"name": "fah",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "Flask Against Humanity (copyright infringement pending).",
 	"long_description": __doc__,
 	"url": "https://github.com/sysr-q/fah",
