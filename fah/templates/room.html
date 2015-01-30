@@ -222,7 +222,7 @@
 			$("#x-super-long").click(function (e) {
 				console.log("xyzzy: Trying to reconnect with mashy-mashy button.");
 				xyzzy.socket.socket.connect();
-				e.preventDefaults();
+				e.preventDefault();
 			});
 
 			$("#handleForm").submit(function (e) {
