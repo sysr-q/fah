@@ -5,7 +5,11 @@
 	{{ super() }}
 
 	<meta name="x-room" content="{{ room | escape }}" />
-	<meta name="x-handle" content="{{ handle | escape }}" />
+	{% if user.handle == None %}
+		<meta name="x-handle" content="" />
+	{% else %}
+		<meta name="x-handle" content="{{ user.handle | escape }}" />
+	{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -49,7 +53,7 @@
 		<h3 class="dark">Share room link</h3>
 	</div>
 	<div class="modal-body">
-		<input id="shareModalLink" type="text" value="{{ url_for('room', name=room, _external=True) }}" readonly>
+		<input id="shareModalLink" type="text" value="{{ url_for('roomx', name=room, _external=True) }}" readonly>
 		<p>
 			Give your friend the above link so they can join you!
 		</p>
@@ -157,7 +161,7 @@
 
 	<script type="text/javascript" charset="utf-8">
 		$(function () {
-			xyzzy.connect();
+			socket = xyzzy.connect();
 
 			// Just in case.
 			xyzzy.socket.on("disconnect", function () {
@@ -166,7 +170,7 @@
 				$("#disconnectModal").modal({keyboard: false, backdrop: 'static'});
 			});
 			xyzzy.socket.on("connect", function () {
-				$("html").addClass("in-game");
+				xyzzy.socket.emit("connect");
 				$("#disconnectModal").modal('hide');
 			});
 			xyzzy.socket.on("reconnecting", function (n) {
@@ -176,6 +180,20 @@
 					$(".x-super-long").removeClass("hide");
 				}
 			});
+			// These ones affect us.
+			xyzzy.socket.on("player.force-handle", function (data) {
+				//xyzzy.changeHandle(data.handle, true);
+				console.log("xyzzy:", data);
+			});
+			xyzzy.socket.on("player.uuid", function (data) {
+				console.log("xyzzy: my uuid '%s'", data.uuid);
+			});
+			// These concern other players.
+			xyzzy.socket.on("player.join", function (data) {
+				console.log("xyzzy", data);
+			});
+
+			console.log("->", socket);
 
 			$("#x-super-long").click(function (e) {
 				console.log("xyzzy: Trying to reconnect with mashy-mashy button.");
@@ -188,13 +206,13 @@
 					local = $h.hasClass("first-time");
 
 				var newHandle = $("#handleForm .x-handle-value").val();
-				xyzzy.changeHandle(newHandle, local);
+				xyzzy.changeHandle(newHandle, false);
 
 				if (local) {
 					$("html").addClass("in-game");
 					$h.removeClass("first-time");
 					$h.modal({keyboard: true, backdrop: true}); // fix it up
-					xyzzy.join(xyzzy.room, true);
+					xyzzy.join(xyzzy.room, true, true);
 				}
 
 

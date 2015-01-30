@@ -12,7 +12,7 @@ xyzzy.connect = function () {
 	return socket;
 };
 
-xyzzy.join = function (room, force) {
+xyzzy.join = function (room, force, dontLeave) {
 	// If force == false, this just lets you change rooms.
 	if (room === xyzzy.room && !force) {
 		// Rejoining? Uh.. Nope?
@@ -23,13 +23,15 @@ xyzzy.join = function (room, force) {
 	xyzzy.members = [];
 
 	// Bail from current room.
-	console.log("xyzzy: Leaving room '%s'", xyzzy.room);
-	xyzzy.socket.emit("leave", {room: xyzzy.room});
+	if (!dontLeave) {
+		console.log("xyzzy: Leaving room '%s'", xyzzy.room);
+		xyzzy.socket.emit("leave", {room: xyzzy.room});
+	}
 
 	// Update and join the new one.
 	xyzzy.room = room;
 	console.log("xyzzy: Joining room '%s'", xyzzy.room);
-	xyzzy.socket.emit("join", {handle: xyzzy.handle, room: xyzzy.room});
+	xyzzy.socket.emit("join", {room: xyzzy.room});
 };
 
 xyzzy.changeHandle = function (new_, local) {
@@ -39,6 +41,7 @@ xyzzy.changeHandle = function (new_, local) {
 	console.log("xyzzy: Changing handle from '%s' to '%s'", xyzzy.handle, new_);
 	xyzzy.handle = new_;
 
+	$("meta[name=x-handle]").val(xyzzy.handle);
 	$(".x-handle").text(xyzzy.handle);
 	$(".x-handle-value").val(xyzzy.handle);
 	if (!local && xyzzy.socket !== null) {
