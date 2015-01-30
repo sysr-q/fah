@@ -26,6 +26,5 @@ RUN chown -R drone:drone /srv/src
 USER drone
 
 # Set up metadata and entrypoints.
-EXPOSE $PORT
 ENTRYPOINT ["python2", "-mfah"]
 CMD []
