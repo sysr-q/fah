@@ -56,4 +56,7 @@ target/
 # vim
 .*.swp
 *~
+
+# FAH stuff
+#fah/static/css/app.css
 trump.py
