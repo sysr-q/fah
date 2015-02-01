@@ -3,7 +3,7 @@ MAINTAINER "Aleksa Sarai <cyphar@cyphar.com>"
 
 # Install basic dependencies.
 RUN apt-get update && apt-get upgrade -y
-RUN apt-get install -y python python-pip python-dev
+RUN apt-get install -y python python-pip python-dev node-less
 
 # Set up non-root runtime user.
 RUN useradd -M -s/bin/nologin -- drone
@@ -22,7 +22,6 @@ COPY . /srv/src
 RUN python2 setup.py install
 
 # Compile LESS css.
-RUN apt-get install -y node-less
 RUN make css
 
 # Switch to non-root user.
