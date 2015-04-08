@@ -11,8 +11,8 @@ class Expansion(db.Model):
 	ident = db.Column(db.String(64), unique=True, nullable=False)
 	description = db.Column(db.Text, nullable=False)
 	# TODO: cascade
-	black_cards = db.relationship("BlackCard", backref="expansion", lazy="dynamic")
-	white_cards = db.relationship("WhiteCard", backref="expansion", lazy="dynamic")
+	black_cards = db.relationship("BlackCard", backref="expansion")
+	white_cards = db.relationship("WhiteCard", backref="expansion")
 
 	def __init__(self, name, ident, description):
 		self.name = name

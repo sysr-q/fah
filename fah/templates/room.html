@@ -79,6 +79,7 @@
 			<div class="expansion">
 				<div class="expansion-name">
 					{{ expansion.name }}
+					<small class="deck-info">({{ expansion.black_cards | length }} black, {{ expansion.white_cards | length }} white)</small>
 					<button class="btn btn-primary pull-right" data-expac="{{ expansion.ident }}">+</button>
 				</div>
 				<small class="expansion-desc fine-print">{{ expansion.description }}</small>

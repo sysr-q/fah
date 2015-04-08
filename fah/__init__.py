@@ -27,12 +27,12 @@ def create_app():
 	socketio = SocketIO(app)
 
 	with app.app_context():
-		if app.debug:
-			db.drop_all()
+		#if app.debug:
+		#	db.drop_all()
 
 		# These two aren't /really/ needed, but in the future perhaps.
-		#store = SQLAlchemyStore(db.engine, db.metadata, 'kvsessions')
-		store = DictStore()
+		#store = DictStore()
+		store = SQLAlchemyStore(db.engine, db.metadata, 'kvsessions')
 		kvsession = KVSessionExtension(store, app)
 
 		db.create_all()
@@ -71,6 +71,12 @@ def setup_user():
 		return
 
 	session["user"] = User(None)  # No handle, but .uuid is unique per player.
+
+@app.context_processor
+def inject_debug():
+	return {"DEBUG": app.debug}
+
+####################
 
 @app.route("/")
 def index():
