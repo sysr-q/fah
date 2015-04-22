@@ -22,6 +22,9 @@ def create_app():
 	app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/xyzzy.db'
 	app.debug = bool(os.getenv("FAH_DEBUG", 0))
 	app.secret_key = '\xfepSY)\x836\xea\xfc\xa4\xcd$\xe1aZ\x04'
+	app.admin_trips = [mktripcode(x.strip(), salt=app.secret_key)
+						for x
+						in os.getenv("FAH_ADMIN_TRIPS", "").split(",")]
 
 	db.init_app(app)
 	socketio = SocketIO(app)
@@ -74,7 +77,12 @@ def setup_user():
 
 @app.context_processor
 def inject_debug():
-	return {"DEBUG": app.debug}
+	trips = ['"{}"'.format(x) for x in app.admin_trips]
+	return {
+		"DEBUG": app.debug,
+		# Ew.
+		"ADMIN_TRIPS": '[{}]'.format(",".join(trips)),
+	}
 
 ####################
 

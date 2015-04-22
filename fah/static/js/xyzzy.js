@@ -4,6 +4,7 @@ xyzzy.handle = $('meta[name=x-handle]').attr('content');
 xyzzy.uuid = null;
 xyzzy.socket = null;
 xyzzy.members = {};
+xyzzy.admins = {};
 
 xyzzy.connect = function () {
 	var socket = xyzzy.socket = io.connect(('https:' == document.location.protocol ? 'https://' : 'http://') + document.domain + ':' + location.port);

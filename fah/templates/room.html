@@ -164,6 +164,7 @@
 		$(function () {
 			socket = xyzzy.connect();
 			var $hM = $("#handleModal");
+			var __ADMIN_TRIPS = {{ ADMIN_TRIPS | safe }};
 
 			function _local_join() {
 				$("html").addClass("in-game");
@@ -189,6 +190,7 @@
 					$(".x-super-long").removeClass("hide");
 				}
 			});
+
 			// These ones affect us.
 			xyzzy.socket.on("player.force-refresh", function () {
 				console.log("xyzzy: forcefully refreshing")
@@ -208,26 +210,33 @@
 				xyzzy.uuid = data.uuid;
 				console.log("xyzzy: my uuid '%s'", data.uuid);
 			});
+
 			// These concern other players.
-			xyzzy.socket.on("player.join", function (data) {
+			var _player_join = function (data) {
+				if (__ADMIN_TRIPS.indexOf(data.trip) > -1) {
+					xyzzy.admins[data.uuid] = true;
+					xyzzy.geocities(true);
+				}
+
 				xyzzy.members[data.uuid] = {
 					handle: data.handle,
 					trip: data.trip
 				};
 				console.log("xyzzy: player '%s#%s' joined (%s)", data.handle, data.trip, data.uuid);
-			});
+			};
+			xyzzy.socket.on("player.join", _player_join);
 			xyzzy.socket.on("player.joins", function (data) {
-				data.forEach(function (player) {
-					xyzzy.members[player.uuid] = {
-						handle: player.handle,
-						trip: player.trip
-					};
-					console.log("xyzzy: player '%s#%s' joined (%s)", player.handle, player.trip, player.uuid);
-				});
+				data.forEach(_player_join);
 			});
 			xyzzy.socket.on("player.leave", function (data) {
 				console.log("xyzzy: player '%s' left (%s)", xyzzy.members[data.uuid].handle, data.uuid);
 				delete xyzzy.members[data.uuid];
+				delete xyzzy.admins[data.uuid];
+
+				if (Object.keys(xyzzy.admins).length < 1) {
+					xyzzy.geocities(false);
+				}
+
 			});
 			xyzzy.socket.on("player.name-change", function (data) {
 				if (data.uuid == xyzzy.uuid) {
